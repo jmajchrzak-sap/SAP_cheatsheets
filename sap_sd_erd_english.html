@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SAP SD – ERD Diagram</title>
+<style>
+  :root{
+    --doc:#e4defa; --doc-b:#8a7ac2; --doc-t:#3d2f73;
+    --mst:#d7f0d9; --mst-b:#5fae6b; --mst-t:#1f5a29;
+    --cst:#fde3cf; --cst-b:#d98b3f; --cst-t:#7a4413;
+    --prc:#e9defa; --prc-b:#9a6fc9; --prc-t:#4a2a72;
+    --whs:#cdeeee; --whs-b:#3f9c9c; --whs-t:#155050;
+    --fi:#f6e6c6; --fi-b:#c99b3f; --fi-t:#6b4c0e;
+    --txt:#d7e6f7; --txt-b:#5f8fc7; --txt-t:#1f3f66;
+    --gen:#e8e6df; --gen-b:#a3a094; --gen-t:#45443d;
+  }
+  *{box-sizing:border-box;}
+  body{font-family:Arial,Helvetica,sans-serif;background:#f4f3ef;margin:0;padding:20px;color:#222;}
+  .title-bar{background:#173d6b;color:#fff;padding:16px 24px;border-radius:8px;margin-bottom:10px;}
+  .title-bar h1{margin:0;font-size:22px;}
+  .subtitle{background:#eef2f7;border:1px solid #cdd8e6;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:13px;color:#334;}
+  .layout{display:grid;grid-template-columns:1fr 260px;gap:16px;align-items:start;}
+  .section{border-radius:10px;padding:12px;margin-bottom:14px;border:1px solid #0002;}
+  .section h2{margin:0 0 10px;font-size:15px;}
+  .cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));}
+  .card{background:#fff;border-radius:8px;padding:8px 10px;font-size:11.5px;line-height:1.5;}
+  .card b{font-size:12.5px;}
+  .row{display:grid;gap:14px;}
+  .row3{grid-template-columns:1fr 1fr 1fr;}
+  .row2{grid-template-columns:1fr 1fr;}
+  .flow-arrow{display:flex;align-items:center;justify-content:center;font-size:20px;color:#888;}
+  .side{border-radius:10px;padding:12px;margin-bottom:14px;border:1px solid #0002;background:#fff;}
+  .side h3{margin:0 0 8px;font-size:14px;border-bottom:1px solid #ddd;padding-bottom:4px;}
+  .side ul{margin:0;padding-left:16px;font-size:12px;line-height:1.6;}
+  .legend-item{display:flex;align-items:center;gap:8px;font-size:12px;margin-bottom:4px;}
+  .swatch{width:14px;height:14px;border-radius:3px;flex-shrink:0;}
+  .footer-bar{background:#173d6b;color:#fff;text-align:center;padding:10px;border-radius:8px;margin-top:14px;font-size:13px;}
+  .note{font-size:11px;color:#556;margin-top:6px;}
+  code{font-family:Consolas,monospace;}
+</style>
+</head>
+<body>
+
+<div class="title-bar"><h1>SAP SD – ERD diagram (database, relationships and transactions)</h1></div>
+<div class="subtitle">From customer and material, through sales order, delivery, goods issue, billing, to accounting – including customizing, pricing, status, text and output tables.</div>
+
+<div class="layout">
+<div>
+
+  <div class="section" style="background:var(--mst);border-color:var(--mst-b)">
+    <h2 style="color:var(--mst-t)">Master data</h2>
+    <div class="cards">
+      <div class="card"><b>Customer Master</b><br>
+        KNA1 – General data<br>KNB1 – Company code data<br>KNVV – Sales data<br><br>
+        <b>KUNNR</b> (PK)<br>BUKRS<br>VKORG<br>VTWEG<br>SPART</div>
+      <div class="card"><b>Partners</b><br>VBPA – Document partners<br><br>
+        <b>VBELN + POSNR</b> (PK)<br>PARVW (partner function)<br>KUNNR / LIFNR / PERNR</div>
+      <div class="card"><b>Material Master</b><br>
+        MARA – General data<br>MAKT – Descriptions<br>MARC – Plant data<br>MBEW – Valuation<br>MVKE – Sales data<br><br>
+        <b>MATNR</b> (PK)<br>WERKS<br>VKORG<br>VTWEG<br>SPART</div>
+      <div class="card"><b>Sales organization</b><br>
+        TVKO – Sales org.<br>TVTW – Distribution channel<br>TSPA – Division<br>TVKOV – Sales area<br><br>
+        <b>VKORG</b> (PK)<br><b>VTWEG</b> (PK)<br><b>SPART</b> (PK)</div>
+    </div>
+  </div>
+
+  <div class="section" style="background:var(--cst);border-color:var(--cst-b)">
+    <h2 style="color:var(--cst-t)">Document types / customizing &amp; texts / output / status</h2>
+    <div class="cards">
+      <div class="card"><b>Document types</b><br>
+        TVAK – Sales doc. types<br>TVAP – Item categories<br>TVEP – Schedule line categories<br>TVLK – Delivery types<br>TVFK – Billing types<br><br>
+        AUART / PSTYV / ETTYP / LFART</div>
+      <div class="card"><b>Texts / output / status</b><br>
+        STXH / STXL – Texts<br>NAST – Output (classic)<br>VBUK – Header status<br>VBUP – Item status<br><br>
+        TDOBJECT/TDNAME/TDID<br>VBELN/VSTAT/VSTATU<br>VBELN/POSNR/VSTST</div>
+    </div>
+  </div>
+
+  <div class="section" style="background:var(--doc);border-color:var(--doc-b)">
+    <h2 style="color:var(--doc-t)">Sales order</h2>
+    <div class="cards">
+      <div class="card"><b>VBAK – Header</b><br>
+        <b>VBELN</b> (PK)<br>AUART<br>VKORG<br>VTWEG<br>SPART<br>KUNNR<br>AUDAT<br>ERDAT<br>ERNAM</div>
+      <div class="card"><b>VBAP – Item</b><br>
+        <b>VBELN + POSNR</b> (PK)<br>MATNR<br>KWMENG<br>VRKME<br>WERKS<br>LGORT<br>PSTYV<br>NETWR</div>
+      <div class="card"><b>VBKD – Business data</b><br>
+        <b>VBELN + POSNR</b> (PK)<br>INCO1 / INCO2<br>ZTERM<br>KUNNR<br>ZBD1T<br>PODKZ</div>
+      <div class="card"><b>VBEP – Schedule lines</b><br>
+        <b>VBELN + POSNR + ETENR</b> (PK)<br>BMENG (confirmed)<br>WMENG (requested)<br>EDATU (delivery date)<br>ETTYP</div>
+    </div>
+    <div class="card" style="margin-top:10px"><b>VBFA – Document flow</b> (links any two SD documents)<br>
+      <b>VBELV / POSNV</b> (PK, predecessor) &nbsp;→&nbsp; VBELN / POSNN (successor) &nbsp;·&nbsp; VBTYP_V / VBTYP_N &nbsp;·&nbsp; VBSTK</div>
+  </div>
+
+  <div class="row row2">
+    <div class="section" style="background:var(--whs);border-color:var(--whs-b)">
+      <h2 style="color:var(--whs-t)">Delivery</h2>
+      <div class="cards">
+        <div class="card"><b>LIKP – Header</b><br>
+          <b>VBELN</b> (PK)<br>LFART<br>KUNNR<br>WADAT<br>LFDAT<br>VKORG<br>VTWEG<br>SPART</div>
+        <div class="card"><b>LIPS – Item</b><br>
+          <b>VBELN + POSNR</b> (PK)<br>MATNR<br>LFIMG<br>VRKME<br>WERKS<br>LGORT<br>VGBEL / VGPOS</div>
+      </div>
+      <div class="card" style="margin-top:10px"><b>Goods movement (S/4HANA – MATDOC)</b><br>
+        <b>MATDOC</b> (PK)<br>MBLNR · ZEILE · BUDAT<br>MATNR · WERKS · LGORT<br>BWART · MENGE</div>
+    </div>
+
+    <div class="section" style="background:var(--doc);border-color:var(--doc-b)">
+      <h2 style="color:var(--doc-t)">Billing</h2>
+      <div class="cards">
+        <div class="card"><b>VBRK – Header</b><br>
+          <b>VBELN</b> (PK)<br>FKART<br>FKDAT<br>KUNAG / KUNRG<br>VKORG / VTWEG<br>WAERK<br>NETWR</div>
+        <div class="card"><b>VBRP – Item</b><br>
+          <b>VBELN + POSNR</b> (PK)<br>MATNR<br>FKIMG<br>NETWR<br>VGBEL / VGPOS<br>AUBEL / AUPOS</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="background:var(--fi);border-color:var(--fi-b)">
+    <h2 style="color:var(--fi-t)">Accounting (FI) — VBRP → BKPF / BSEG / ACDOCA</h2>
+    <div class="cards">
+      <div class="card"><b>BKPF – Header</b><br>
+        <b>BELNR</b> (PK)<br>BUKRS<br>BLDAT<br>BUDAT<br>XBLNR</div>
+      <div class="card"><b>BSEG – Item</b><br>
+        <b>BELNR + BUZEI</b> (PK)<br>HKONT<br>KUNNR<br>WRBTR<br>SGTXT</div>
+      <div class="card"><b>ACDOCA (S/4HANA)</b><br>
+        <b>RBUKRS</b> (PK)<br>BELNR · GJAHR · BUZEI<br>HSL<br>KUNNR · MATNR</div>
+    </div>
+  </div>
+
+  <div class="section" style="background:var(--prc);border-color:var(--prc-b)">
+    <h2 style="color:var(--prc-t)">Pricing</h2>
+    <div class="cards">
+      <div class="card"><b>PRCD_ELEMENTS (S/4HANA) / KONV (ECC)</b><br>
+        <b>VBELN+POSNR+KNUMV+KPOSN</b> (PK)<br>STUNR<br>KSCHL (condition type)<br>KWERT<br>KONWA</div>
+      <div class="card"><b>KONH – Header</b><br><b>KNUMH</b> (PK)<br>KAPPL<br>KSCHL</div>
+      <div class="card"><b>KONP – Condition records</b><br><b>KNUMH</b> (PK)<br>DATAB<br>KBETR<br>KONWA</div>
+      <div class="card"><b>Axxx – Access tables</b><br>A901 / A902 / …</div>
+    </div>
+  </div>
+
+  <div class="section" style="background:var(--gen);border-color:var(--gen-b)">
+    <h2 style="color:var(--gen-t)">Organizational data</h2>
+    <div class="cards">
+      <div class="card"><b>TVLS – Sales regions</b><br><b>VKORG + VTWEG</b> (PK)<br>LAND1</div>
+      <div class="card"><b>T001W – Plants</b><br><b>WERKS</b> (PK)<br>LAND1</div>
+      <div class="card"><b>T005 – Countries</b><br><b>LAND1</b> (PK)<br>LANDX</div>
+      <div class="card"><b>T006 – Units / currencies</b><br><b>WAERS</b> (PK)<br>TXTS0</div>
+    </div>
+  </div>
+
+</div>
+
+<div>
+  <div class="side">
+    <h3>Legend</h3>
+    <div class="legend-item"><span class="swatch" style="background:var(--doc)"></span>SD documents (order, delivery, invoice)</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--mst)"></span>Master data (customer, material)</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--cst)"></span>Customizing (types, org, conditions)</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--prc)"></span>Pricing</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--whs)"></span>Materials / warehouse</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--fi)"></span>Accounting (FI)</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--txt)"></span>Texts / output / status</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--gen)"></span>General / helper</div>
+    <div class="note">1 → one-to-one &nbsp;·&nbsp; 1..n → one-to-many &nbsp;·&nbsp; 0..n → optional &nbsp;·&nbsp; arrow → relationship / document flow</div>
+  </div>
+
+  <div class="side">
+    <h3>Key transactions</h3>
+    <b style="font-size:12px">Sales (order)</b>
+    <ul><li>VA01 – create</li><li>VA02 – change</li><li>VA03 – display</li><li>VA05 – list orders</li></ul>
+    <b style="font-size:12px">Delivery</b>
+    <ul><li>VL01N – create</li><li>VL02N – change</li><li>VL03N – display</li></ul>
+    <b style="font-size:12px">Billing</b>
+    <ul><li>VF01 – create</li><li>VF02 – change</li><li>VF03 – display</li><li>VF04 – billing due list</li></ul>
+    <b style="font-size:12px">Customer / partner</b>
+    <ul><li>BP – Business Partner</li><li>XD03 – customer display (ECC)</li><li>VD03 – sales view display</li></ul>
+    <b style="font-size:12px">Material</b>
+    <ul><li>MM03 – display material</li></ul>
+    <b style="font-size:12px">Pricing</b>
+    <ul><li>VK11 / VK12 / VK13 – condition maintenance</li></ul>
+    <b style="font-size:12px">Customizing SD</b>
+    <ul><li>VOV8 – document types</li><li>VOV7 – item categories</li><li>VOV6 – schedule line categories</li><li>OVLK – delivery types</li><li>VOFA – billing types</li></ul>
+    <b style="font-size:12px">Table analysis</b>
+    <ul><li>SE16N / SE16 – table browser</li></ul>
+    <b style="font-size:12px">Other</b>
+    <ul><li>SE11 – Dictionary</li><li>SE37 – Function modules</li><li>ST05 – SQL trace</li><li>SAT – ABAP runtime analysis</li><li>SU53 – Authorization check</li></ul>
+  </div>
+</div>
+</div>
+
+<div class="footer-bar">SAP SD — from customer to accounting — complete data flow and table relationships</div>
+<div class="note" style="margin-top:6px">Note: not all SD tables are listed here. This diagram covers the most important tables and relationships. In S/4HANA, some tables (e.g. KONV, MKPF/MSEG) have been replaced by newer solutions (e.g. PRCD_ELEMENTS, MATDOC, CDS views).</div>
+
+</body>
+</html>
